@@ -1,14 +1,24 @@
 const Product = require("../models/productModel.js");
+const ErrorHandler = require("../utils/errorHandler.js");
+const asyncErrorHandler = require("../middleware/asyncError.js");
 
-exports.createProduct = async (req, res, next) => {
+exports.getAllProducts = asyncErrorHandler(async (req, res) => {
+  const products = await Product.find();
+  res.status(200).json({
+    success: true,
+    products,
+  });
+});
+
+exports.createProduct = asyncErrorHandler(async (req, res, next) => {
   const product = await Product.create(req.body);
   res.status(201).json({
     success: true,
     product,
   });
-};
+});
 
-exports.getSingleProduct = async (req, res, next) => {
+exports.getSingleProduct = asyncErrorHandler(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
   if (product) {
     res.status(200).json({
@@ -16,22 +26,11 @@ exports.getSingleProduct = async (req, res, next) => {
       product,
     });
   } else {
-    return res.status(500).json({
-      success: false,
-      message: "Product not found",
-    });
+    return next(new ErrorHandler("Product not Found", 404));
   }
-};
+});
 
-exports.getAllProducts = async (req, res) => {
-  const products = await Product.find();
-  res.status(200).json({
-    success: true,
-    products,
-  });
-};
-
-exports.updateProduct = async (req, res, next) => {
+exports.updateProduct = asyncErrorHandler(async (req, res, next) => {
   let product = await Product.findById(req.params.id);
 
   if (product) {
@@ -45,14 +44,11 @@ exports.updateProduct = async (req, res, next) => {
       product,
     });
   } else {
-    return res.status(500).json({
-      success: false,
-      message: "Product not found",
-    });
+    return next(new ErrorHandler("Product not Found", 404));
   }
-};
+});
 
-exports.removeProduct = async (req, res, next) => {
+exports.removeProduct = asyncErrorHandler(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
 
   if (product) {
@@ -62,9 +58,6 @@ exports.removeProduct = async (req, res, next) => {
       message: "Product Removed Successfully",
     });
   } else {
-    return res.status(500).json({
-      success: false,
-      message: "Product not Found",
-    });
+    return next(new ErrorHandler("Product not Found", 404));
   }
-};
+});

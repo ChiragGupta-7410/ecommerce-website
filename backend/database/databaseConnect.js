@@ -8,14 +8,9 @@ const connectDatabase = () => {
     useUnifiedTopology: true,
   };
 
-  mongoose
-    .connect(productDatabaseUrl, connectionParams)
-    .then((data) => {
-      console.log(`Database Connected: ${data.connection.host}`);
-    })
-    .catch((err) => {
-      console.error("Error in connecting to the database", err);
-    });
+  mongoose.connect(productDatabaseUrl, connectionParams).then((data) => {
+    console.log(`Database Connected: ${data.connection.host}`);
+  });
 };
 
 module.exports = connectDatabase;
