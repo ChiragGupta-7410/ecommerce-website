@@ -1,12 +1,21 @@
 const Product = require("../models/productModel.js");
 const ErrorHandler = require("../utils/errorHandler.js");
 const asyncErrorHandler = require("../middleware/asyncError.js");
+const QueryHandler = require("../utils/queryHandler.js");
 
 exports.getAllProducts = asyncErrorHandler(async (req, res) => {
-  const products = await Product.find();
+  const defaultProductPerPage = 5;
+  const productCount = await Product.countDocuments();
+
+  const queryHandler = new QueryHandler(Product.find(), req.query)
+    .search()
+    .filter()
+    .pagination(defaultProductPerPage);
+  const products = await queryHandler.query;
   res.status(200).json({
     success: true,
     products,
+    productCount,
   });
 });
 
