@@ -4,7 +4,7 @@ const productSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Enter Product Name"],
+      required: [true, "Product Name Not Added"],
     },
     images: [
       {
@@ -20,21 +20,21 @@ const productSchema = new mongoose.Schema(
     ],
     description: {
       type: String,
-      required: [true, "Enter Product Description"],
+      required: [true, "Product Description Not Added"],
     },
     category: {
       type: String,
-      required: [true, "Enter Product Category"],
+      required: [true, "Product Category Not Added"],
     },
     price: {
       type: Number,
-      required: [true, "Enter Product Price"],
+      required: [true, "Product Price Not Added"],
       default: 0,
       maxLength: [10, "Price cannot exceed 10 characters"],
     },
     Stock: {
       type: Number,
-      required: [true, "Enter Product Stock"],
+      required: [true, "Product Stock Not Added"],
       default: 0,
     },
     reviews: [

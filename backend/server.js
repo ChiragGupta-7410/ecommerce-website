@@ -1,6 +1,6 @@
-const app = require("./app");
+const app = require("./app.js");
 const dotenv = require("dotenv");
-const connectDatabase = require("./database/databaseConnect");
+const connectDatabase = require("./database/databaseConnect.js");
 
 // Handling Uncaught Exception
 
