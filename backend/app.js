@@ -1,9 +1,11 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const errorMiddleware = require("./middleware/error.js");
 
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 // Route Management
 const products = require("./routes/productRoute");

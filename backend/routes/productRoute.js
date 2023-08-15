@@ -5,16 +5,22 @@ const {
   getSingleProduct,
   updateProduct,
   removeProduct,
-} = require("../controllers/productController");
+} = require("../controllers/productController.js");
+const {
+  authenticatedUser,
+  administrativePrivileges,
+} = require("../middleware/userAuthentication.js");
 
 const router = express.Router();
 
 router.route("/products").get(getAllProducts);
-router.route("/products/new").post(createProduct);
+router
+  .route("/products/new")
+  .post(authenticatedUser, administrativePrivileges(), createProduct);
 router
   .route("/products/:id")
   .get(getSingleProduct)
-  .put(updateProduct)
-  .delete(removeProduct);
+  .put(authenticatedUser, administrativePrivileges(), updateProduct)
+  .delete(authenticatedUser, administrativePrivileges(), removeProduct);
 
 module.exports = router;
