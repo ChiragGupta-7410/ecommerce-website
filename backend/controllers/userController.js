@@ -4,15 +4,63 @@ const ErrorHandler = require("../utils/errorHandler.js");
 const asyncErrorHandler = require("../middleware/asyncError.js");
 const sendToken = require("../utils/jwtTokenCreation.js");
 const sendEmail = require("../utils/sendEmail.js");
+const RequestBodyHandler = require("../utils/reqBodyHandler.js");
 
-exports.getAllUsers = asyncErrorHandler(async (req, res, next) => {
-  const users = await User.find();
+// User Routes
+
+exports.userDetails = asyncErrorHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
 
   res.status(200).json({
     success: true,
-    users,
+    user,
   });
 });
+
+exports.updateDetails = asyncErrorHandler(async (req, res, next) => {
+  if ("avatar" in req.body) {
+    const avatar = req.body.avatar;
+    delete req.body.avatar;
+    req.body.avatar = { id: "avatar_id_2", url: "avatar_url_2" };
+  }
+
+  const requestBodyHandler = new RequestBodyHandler(req.body).filter();
+
+  const user = await User.findByIdAndUpdate(
+    req.user.id,
+    requestBodyHandler.reqBodyStr,
+    {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    }
+  );
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+exports.updatePassword = asyncErrorHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("+password"); // because we select: false in the user model for password
+
+  const passwordMatched = await user.comparePassword(req.body.currentPassword);
+
+  if (!passwordMatched) {
+    return next(new ErrorHandler("Incorrect Current Password", 400));
+  } else if (req.body.newPassword !== req.body.confirmPassword) {
+    return next(new ErrorHandler("Passwords Does Not Match", 400));
+  }
+
+  user.password = req.body.newPassword;
+
+  await user.save();
+
+  sendToken(user, 200, res);
+});
+
+// User Authentication and Password Handling
 
 exports.userSignUp = asyncErrorHandler(async (req, res, next) => {
   const user = await User.create(req.body);
@@ -117,5 +165,87 @@ exports.resetPassword = asyncErrorHandler(async (req, res, next) => {
     sendToken(user, 200, res);
   } else {
     return next(new ErrorHandler("Bad Token", 498));
+  }
+});
+
+// Admin Routes
+
+exports.getAllUsers = asyncErrorHandler(async (req, res, next) => {
+  const userCount = await User.countDocuments();
+
+  const users = await User.find();
+
+  res.status(200).json({
+    success: true,
+    users,
+    userCount,
+  });
+});
+
+exports.getSingleUser = asyncErrorHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } else {
+    return next(new ErrorHandler("User Not Found", 404));
+  }
+});
+
+exports.adminUpdateUserDetails = asyncErrorHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    let isAdmin = undefined;
+
+    if ("isAdmin" in req.body) {
+      isAdmin = req.body.isAdmin;
+    }
+
+    if ("avatar" in req.body) {
+      const avatar = req.body.avatar;
+      delete req.body.avatar;
+      req.body.avatar = { id: "avatar_id_2", url: "avatar_url_2" };
+    }
+
+    const requestBodyHandler = new RequestBodyHandler(req.body).filter();
+
+    if (isAdmin !== undefined) {
+      requestBodyHandler.reqBodyStr.isAdmin = isAdmin;
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      requestBodyHandler.reqBodyStr,
+      {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false,
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } else {
+    return next(new ErrorHandler("User Not Found", 404));
+  }
+});
+
+exports.adminDeleteUser = asyncErrorHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    await user.deleteOne();
+    res.status(200).json({
+      success: true,
+      message: "User Deleted Successfully",
+    });
+  } else {
+    return next(new ErrorHandler("User Not Found", 404));
   }
 });

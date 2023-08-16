@@ -19,14 +19,6 @@ exports.getAllProducts = asyncErrorHandler(async (req, res) => {
   });
 });
 
-exports.createProduct = asyncErrorHandler(async (req, res, next) => {
-  const product = await Product.create(req.body);
-  res.status(201).json({
-    success: true,
-    product,
-  });
-});
-
 exports.getSingleProduct = asyncErrorHandler(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
   if (product) {
@@ -37,6 +29,14 @@ exports.getSingleProduct = asyncErrorHandler(async (req, res, next) => {
   } else {
     return next(new ErrorHandler("Product not Found", 404));
   }
+});
+
+exports.createProduct = asyncErrorHandler(async (req, res, next) => {
+  const product = await Product.create(req.body);
+  res.status(201).json({
+    success: true,
+    product,
+  });
 });
 
 exports.updateProduct = asyncErrorHandler(async (req, res, next) => {

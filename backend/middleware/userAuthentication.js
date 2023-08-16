@@ -7,7 +7,7 @@ exports.authenticatedUser = asyncErrorHandler(async (req, res, next) => {
   const { token } = req.cookies;
 
   if (!token) {
-    return next(new ErrorHandler("Resource requires Login", 401));
+    return next(new ErrorHandler("Resource Requires Login", 401));
   }
 
   const decryptedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
