@@ -24,7 +24,7 @@ exports.updateDetails = asyncErrorHandler(async (req, res, next) => {
     req.body.avatar = { id: "avatar_id_2", url: "avatar_url_2" };
   }
 
-  const requestBodyHandler = new RequestBodyHandler(req.body).filter();
+  const requestBodyHandler = new RequestBodyHandler(req.body).userFilter();
 
   const user = await User.findByIdAndUpdate(
     req.user.id,
