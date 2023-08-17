@@ -1,10 +1,10 @@
 const crypto = require("crypto");
 const User = require("../models/userModel.js");
 const ErrorHandler = require("../utils/errorHandler.js");
-const asyncErrorHandler = require("../middleware/asyncError.js");
+const RequestBodyHandler = require("../utils/reqBodyHandler.js");
 const sendToken = require("../utils/jwtTokenCreation.js");
 const sendEmail = require("../utils/sendEmail.js");
-const RequestBodyHandler = require("../utils/reqBodyHandler.js");
+const asyncErrorHandler = require("../middleware/asyncError.js");
 
 // User Routes
 

@@ -33,7 +33,7 @@ router.route("/users/logout").get(userLogOut);
 router.route("/users/password/forgot").post(forgotPassword);
 router.route("/users/password/reset/:token").put(resetPassword);
 router
-  .route("/admin/users/")
+  .route("/admin/users")
   .get(authenticatedUser, administrativePrivileges(), getAllUsers);
 router
   .route("/admin/users/:id")

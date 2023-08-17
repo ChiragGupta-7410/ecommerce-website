@@ -1,8 +1,8 @@
 const Product = require("../models/productModel.js");
 const ErrorHandler = require("../utils/errorHandler.js");
-const asyncErrorHandler = require("../middleware/asyncError.js");
 const QueryHandler = require("../utils/queryHandler.js");
 const RequestBodyHandler = require("../utils/reqBodyHandler.js");
+const asyncErrorHandler = require("../middleware/asyncError.js");
 
 exports.getAllProducts = asyncErrorHandler(async (req, res) => {
   const defaultProductPerPage = 5;
@@ -206,3 +206,15 @@ exports.deleteProductReview = asyncErrorHandler(async (req, res, next) => {
     return next(new ErrorHandler("Product Not Found", 404));
   }
 });
+
+// For Order Controller Use
+
+exports.updateInventory = {
+  async updateStock(productId, quantity) {
+    const product = await Product.findById(productId);
+
+    product.stock -= quantity;
+
+    await product.save({ validateBeforeSave: false });
+  },
+};

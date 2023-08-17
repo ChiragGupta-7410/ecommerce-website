@@ -56,7 +56,7 @@ const productSchema = new mongoose.Schema(
       default: 0,
       maxLength: [10, "Price cannot exceed 10 characters"],
     },
-    Stock: {
+    stock: {
       type: Number,
       required: [true, "Product Stock Not Added"],
       default: 0,
