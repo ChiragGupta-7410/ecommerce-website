@@ -1,9 +1,11 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
+import "react-toastify/dist/ReactToastify.css";
 import Header from "./components/headerComponents/Header.js";
 import Home from "./components/homeComponents/Home.js";
 import Footer from "./components/footerComponents/Footer.js";
+import SingleProduct from "./components/productComponents/SingleProduct.js";
 
 function App() {
   const theme = {
@@ -21,7 +23,7 @@ function App() {
       border: "#08D9D680",
       hover: "#A6E3E9",
       gradient: "linear-gradient(0deg, #71C9CE 0%, #A6E3E9 100%)",
-      shadow: "#00000005 0px 1px 3px 0px,#1b1f2326 0px 0px 0px 1px;",
+      shadow: "0 0 1rem #00000099",
       shadowSupport: " #00000029 0px 1px 4px",
       palette: {
         first: "#E3FDFD",
@@ -32,7 +34,7 @@ function App() {
       },
     },
     screen: {
-      mobile: "768px",
+      mobile: "780px",
       tablet: "970px",
       small_desktop: "1080px",
     },
@@ -44,6 +46,7 @@ function App() {
         <Header />
         <Routes>
           <Route exact path="/" Component={Home} />
+          <Route exact path="/products/:id" Component={SingleProduct} />
         </Routes>
         <Footer />
       </Router>

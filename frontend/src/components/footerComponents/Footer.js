@@ -9,7 +9,12 @@ const Footer = () => {
       <div className="footer-subscribe">
         <h2>Subscribe to get important updates!</h2>
         <form action="https://formspree.io/f/mzblrbll" method="POST">
-          <input type="email" name="email" placeholder="Email ID" />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email ID"
+            autoComplete="on"
+          />
 
           <input type="submit" value="Subscribe" />
         </form>

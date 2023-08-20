@@ -4,8 +4,8 @@ const QueryHandler = require("../utils/queryHandler.js");
 const RequestBodyHandler = require("../utils/reqBodyHandler.js");
 const asyncErrorHandler = require("../middleware/asyncError.js");
 
-exports.getAllProducts = asyncErrorHandler(async (req, res) => {
-  const defaultProductPerPage = 5;
+exports.getAllProducts = asyncErrorHandler(async (req, res, next) => {
+  const defaultProductPerPage = 8;
   const productCount = await Product.countDocuments();
 
   const queryHandler = new QueryHandler(Product.find(), req.query)

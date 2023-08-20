@@ -1,52 +1,70 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import styled from "styled-components";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import { useSelector, useDispatch } from "react-redux";
+import { useAlert } from "react-alert";
 import Card from "./Card.js";
-
-const product = {
-  name: "Blue shirt",
-  images: [{ url: "https://i.ibb.co/DRST11n/1.webp" }],
-  price: 3000,
-  _id: "abhishek",
-  numOfReviews: 5,
-};
+import MetaData from "../metaComponents/MetaData.js";
+import {
+  clearErrors,
+  getAllProducts,
+} from "../../redux/actions/ProductActions.js";
+import Loader from "../loaderComponents/Loader.js";
 
 const Home = () => {
+  const alert = useAlert();
+  const dispatch = useDispatch();
+  const { loading, error, products, productCount } = useSelector(
+    (state) => state.productList
+  );
+
+  useEffect(() => {
+    if (error) {
+      return alert.error(error);
+    }
+    dispatch(getAllProducts());
+  }, [dispatch, error, alert]);
+
   return (
     <Fragment>
-      <Wrapper className="homepage">
-        <div className="cover_page">
-          <div className="introduction">
-            <p className="intro-data">Welcome to </p>
-            <h1>Laptop Shop</h1>
-            <h2>Your One-Stop Laptop Universe</h2>
-            <p>
-              Find the perfect laptop, elevate your setup with cutting-edge
-              accessories, and join our tech tribe. Dive into the future of tech
-              shopping now!
-            </p>
-            <a href="#featured">
-              <button>
-                <AiOutlineShoppingCart /> Shop Now
-              </button>
-            </a>
-          </div>
-        </div>
-        <div id="featured">
-          <div className="featured">
-            <h2>Featured Products</h2>
-
-            <div className="products">
-              <Card product={product} />
-              <Card product={product} />
-              <Card product={product} />
-              <Card product={product} />
-              <Card product={product} />
-              <Card product={product} />
+      {loading ? (
+        <Loader />
+      ) : (
+        <Fragment>
+          <MetaData title="Laptop Shop - Your One-Stop Laptop Universe" />
+          <Wrapper className="homepage">
+            <div className="cover_page">
+              <div className="introduction">
+                <p className="intro-data">Welcome to </p>
+                <h1>Laptop Shop</h1>
+                <h2>Your One-Stop Laptop Universe</h2>
+                <p>
+                  Find the perfect laptop, elevate your setup with cutting-edge
+                  accessories, and join our tech tribe. Dive into the future of
+                  tech shopping now!
+                </p>
+                <a href="#featured">
+                  <button>
+                    <AiOutlineShoppingCart /> Shop Now
+                  </button>
+                </a>
+              </div>
             </div>
-          </div>
-        </div>
-      </Wrapper>
+            <div id="featured">
+              <div className="featured">
+                <h2>Featured Products</h2>
+
+                <div className="products">
+                  {products &&
+                    products.map((product) => (
+                      <Card key={product._id} product={product} />
+                    ))}
+                </div>
+              </div>
+            </div>
+          </Wrapper>
+        </Fragment>
+      )}
     </Fragment>
   );
 };

@@ -5,14 +5,19 @@ import styled from "styled-components";
 
 const Card = ({ product }) => {
   const options = {
+    edit: false,
+    color: "#526D82",
+    activeColor: "#222831",
+    isHalf: true,
+    size: window.innerWidth < 600 ? 20 : 25,
     value: product.rating,
     readOnly: true,
     precision: 0.5,
   };
   return (
     <Wrapper>
-      <Link class="productCard" to={`/product/${product._id}`}>
-        <img src={product.images[0].url} alt={product.name} />
+      <Link className="productCard" to={`/products/${product._id}`}>
+        <img src="https://i.ibb.co/DRST11n/1.webp" alt={product.name} />
         <p>{product.name}</p>
         <div>
           <ReactStars {...options} />
@@ -35,7 +40,6 @@ const Wrapper = styled.div`
     background-color: ${({ theme }) => theme.colors.palette.third};
     color: ${({ theme }) => theme.colors.black};
     margin: 2vmax;
-    transition: all 0.5s;
     padding-bottom: 0.5vmax;
     border-radius: 0 10px;
 
@@ -70,6 +74,7 @@ const Wrapper = styled.div`
   .productCard:hover {
     box-shadow: 0 0 5px ${({ theme }) => theme.colors.grey};
     transform: translateY(-1vmax);
+    transition: 0.5s;
   }
 
   @media screen and (max-width: ${({ theme }) => theme.screen.mobile}) {

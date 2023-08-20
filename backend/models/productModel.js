@@ -30,18 +30,16 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, "Product Name Not Added"],
     },
-    images: [
-      {
-        id: {
-          type: String,
-          required: true,
-        },
-        url: {
-          type: String,
-          required: true,
-        },
+    images: {
+      id: {
+        type: String,
+        required: true,
       },
-    ],
+      url: {
+        type: String,
+        required: true,
+      },
+    },
     description: {
       type: String,
       required: [true, "Product Description Not Added"],
